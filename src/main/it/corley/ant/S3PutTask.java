@@ -47,6 +47,8 @@ public class S3PutTask extends AWSTask {
     
     private String contentEncoding;
     
+    private String customHeaders;
+    
     private String endPoint = "s3-eu-west-1.amazonaws.com";
 
     /**
@@ -172,6 +174,14 @@ public class S3PutTask extends AWSTask {
         if (contentEncoding != null && !contentEncodingMetadataSet) {
         	metadata.setContentEncoding(contentEncoding);
         }
+		
+		if (customHeaders != null) {
+			String[] headers = customHeaders.split("\t");
+			for (int i = 0; i < headers.length; i++) {
+				String[] keyValue = headers[i].split(":");
+				metadata.addUserMetadata(keyValue[0].trim(), keyValue[1].trim());
+			}
+		}
         
         por.setMetadata(metadata);
     }
@@ -211,6 +221,10 @@ public class S3PutTask extends AWSTask {
     
     public void setContentEncoding(String contentEncoding) {
     	this.contentEncoding = contentEncoding;
+    }
+    
+    public void setCustomHeaders(String customHeaders) {
+    	this.customHeaders = customHeaders;
     }
 
     /**
